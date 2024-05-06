@@ -26,7 +26,7 @@ const Favorites = () => {
             setShows(newShows);
             setLoading(false);
         } else {
-            setLoading(false); // Si no hay favoritos, detener la carga
+            setLoading(false); 
         }
     };
 
@@ -36,10 +36,12 @@ const Favorites = () => {
     }, []);
 
     return (
-        <div>
+        <div className="bg-purple-900 min-h-screen p-8">
             {!loading ? (
-                <div>
-                    <h2></h2>
+                <div >
+                    <h2 className="text-3xl font-bold text-white mb-4">
+                        My Favorites
+                    </h2>
                     {favorites && favorites.length > 0 ? (
                         shows && shows.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -56,14 +58,14 @@ const Favorites = () => {
                             </div>
                         ) : (
                             <div className="text-wrap text-xl text-center my-8">
-                                <p className="text-gray-700">
+                                <p className="animate-pulse text-white">
                                     ¡Oops! Parece que todavía no agregaste ninguna película a tus favoritos.
                                 </p>
                             </div>
                         )
                     ) : (
                         <div className="text-xl text-center my-8">
-                            <p className="text-gray-700">
+                            <p className="text-white">
                                 ¡Oops! No hay películas agregadas a favoritos.
                             </p>
     </div>
