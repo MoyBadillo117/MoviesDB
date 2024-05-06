@@ -1,9 +1,9 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { IDetailsResponse, getDetailsMovies } from "../../services";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { IDetailsResponse, IMovieResponse, getDetailsMovies, getRecommendations } from "../../services";
 import { IMAGE_SOURCE } from "../../constants/moviesMock";
 import { ProgressBar } from "../../components/ProgressBar";
+import {MovieCard} from "../../components/MovieCard";
 
 const Show = () => {
     const { id } = useParams();
@@ -13,6 +13,7 @@ const Show = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [favorites, setFavorites] = useState<string>("");
+    const [recommendedMovies, setRecommendedMovies] = useState<IMovieResponse[]>([]);
 
     const addFavorite = () => {
         const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
@@ -24,8 +25,7 @@ const Show = () => {
 
     const removeFavorite = () => {
         const favs = favorites.length > 0 ? JSON.parse(favorites) : [];
-        let newFavorites = [...favs];
-        newFavorites = newFavorites.filter((e) => e !== id);
+        const newFavorites = favs.filter((e: string) => e !== id);
         setFavorites(JSON.stringify(newFavorites));
         setIsFavorite(false);
         localStorage.setItem("favorites", JSON.stringify(newFavorites));
@@ -38,15 +38,29 @@ const Show = () => {
     const getDetails = async () => {
         const movieId = id ? parseInt(id) : undefined;
         if (movieId) {
-            await getDetailsMovies(movieId)
-                .then((res) => {
-                    if (res && res.data) {
-                        setMovie(res.data);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err, "err");
-                });
+            try {
+                const res = await getDetailsMovies(movieId);
+                if (res && res.data) {
+                    setMovie(res.data);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            setLoading(false);
+        }
+    };
+
+    const getRecommendedMovies = async () => {
+        const movieId = id ? parseInt(id) : undefined;
+        if (movieId) {
+            try {
+                const res = await getRecommendations(movieId);
+                if (res && res.data) {
+                    setRecommendedMovies(res.data.results);
+                }
+            } catch (err) {
+                console.log(err);
+            }
             setLoading(false);
         }
     };
@@ -54,12 +68,11 @@ const Show = () => {
     useEffect(() => {
         const favs = localStorage.getItem("favorites") || "";
         setFavorites(favs);
-        if (favs.includes(String(id))) {
-            setIsFavorite(true);
-        }
+        setIsFavorite(favs.includes(String(id)));
         setLoading(true);
         getDetails();
-    }, []);
+        getRecommendedMovies();
+    }, [id]);
 
     return (
         <div className="mx-10 my-8 p-6 bg-gray-200 rounded-lg shadow-xl">
@@ -113,6 +126,21 @@ const Show = () => {
                                     </button>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-bold mb-4">Recomendaciones</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {recommendedMovies.map((recommendedMovie: IMovieResponse) => (
+                                <MovieCard
+                                    key={recommendedMovie.id}
+                                    movieId={recommendedMovie.id}
+                                    posterPath={recommendedMovie.poster_path}
+                                    title={recommendedMovie.title}
+                                    voteAverage={recommendedMovie.vote_average}
+                                    genreId={recommendedMovie.genre_ids[0]}
+                                />
+                            ))}
                         </div>
                     </div>
                 </>

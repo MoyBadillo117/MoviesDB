@@ -28,7 +28,7 @@ const TopRated: React.FC = () => {
 
     return (
         <div>
-             <div className='block pl-1 bg-purple-900'>
+             <div className='block pl-1 bg-gray-300'>
             {loading && <div> Loading... </div>}
             {errorMovies && <div> Error... </div>}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>

@@ -36,10 +36,10 @@ const Favorites = () => {
     }, []);
 
     return (
-        <div className="bg-purple-900 min-h-screen p-8">
+        <div className="bg-gray-300 min-h-screen p-8">
             {!loading ? (
                 <div >
-                    <h2 className="text-3xl font-bold text-white mb-4">
+                    <h2 className="text-3xl font-bold text-black mb-4">
                         My Favorites
                     </h2>
                     {favorites && favorites.length > 0 ? (
@@ -58,7 +58,7 @@ const Favorites = () => {
                             </div>
                         ) : (
                             <div className="text-wrap text-xl text-center my-8">
-                                <p className="animate-pulse text-white">
+                                <p className="animate-pulse text-black">
                                     ¡Oops! Parece que todavía no agregaste ninguna película a tus favoritos.
                                 </p>
                             </div>
