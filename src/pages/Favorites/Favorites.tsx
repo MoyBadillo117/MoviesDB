@@ -65,7 +65,7 @@ const Favorites = () => {
                         )
                     ) : (
                         <div className="text-xl text-center my-8">
-                            <p className="text-white">
+                            <p className="text-black">
                                 ¡Oops! No hay películas agregadas a favoritos.
                             </p>
     </div>
